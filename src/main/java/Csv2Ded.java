@@ -1,5 +1,6 @@
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.List;
 
 import com.opencsv.CSVReader;
 
@@ -10,10 +11,11 @@ public class Csv2Ded
 	public static void main(String[] args) throws Exception 
 	{
 		CSVReader reader = new CSVReader(new FileReader(args[0]), ',');
-		String [] line;
 		FileWriter sceneWriter = new FileWriter(args[1]);
-		while ((line = reader.readNext()) != null) 
+		List<String[]> lines = reader.readAll();
+		for(int j = 0; j < lines.size(); j++)
 		{	
+			String [] line = lines.get(j);
 			String num1 = line[0];
 			String num2 = line[1];
 			num1 = num1.replaceAll(" ", "");
@@ -23,9 +25,15 @@ public class Csv2Ded
 			*/
 			for(int i = Integer.parseInt(num1); i < Integer.parseInt(num2); i++ )
 			{
-				sceneWriter.write("0" + "\n");
+				sceneWriter.write("0" + "\r\n");
+			}			
+			sceneWriter.write("1");
+			
+			//Prevents blank lines after the end of data
+			if( (j + 1) < lines.size())
+			{
+				sceneWriter.write("\r\n");
 			}
-			sceneWriter.write("1" + "\n");
 		}
 		reader.close();
 		sceneWriter.close();
